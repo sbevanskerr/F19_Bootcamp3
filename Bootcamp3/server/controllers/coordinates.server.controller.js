@@ -21,7 +21,13 @@ module.exports = function(req, res, next) {
     request({
       url: 'https://api.opencagedata.com/geocode/v1/json', 
       qs: options
-      }, function(error, response, body) {
+    }, function (error, response, body) {
+            if (error) {
+                response.send(error);
+            }
+            var data = JSON.parse(body);
+            var place = data.results[0];
+            req.results = place.geometry;
         //For ideas about response and error processing see https://opencagedata.com/tutorials/geocode-in-nodejs
         
         //JSON.parse to get contents. Remember to look at the response's JSON format in open cage data

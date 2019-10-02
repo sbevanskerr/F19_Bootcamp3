@@ -54,8 +54,51 @@ exports.read = function(req, res) {
 };
 
 /* Update a listing - note the order in which this function is called by the router*/
-exports.update = function(req, res) {
-  var listing = req.listing;
+exports.update = function (req, res) {
+    var listing = req.listing;
+
+    listing.name = req.body.name ? req.body.name : listing.name;
+    listing.code = req.body.code;
+    listing.address = req.body.address;
+
+    if (req.results) {
+        listing.coordinates = {
+            latitude: req.results.lat,
+            longitude: req.results.lng
+        };
+    }
+
+    listing.save(function (err) {
+        if (err) {
+            console.log(err);
+            res.status(400).send(err);
+        } else {
+            res.json(listing);
+            console.log(listing)
+        }
+    });
+};
+    
+
+
+    /*var listing = req.listing;
+
+    var bodyList = new Listing(req.body);
+
+    var query = { code: listing.code };
+    var update =
+    {
+        name: bodyList.name, 
+        code: bodyList.code,
+        address: bodyList.address
+    }
+
+    Listing.updateOne(query, update);
+
+    res.send("Updated correctly!"); */
+    //listing.name = body.name
+  //  listing.put() ?
+   // listing.update = (req, res) { }
 
   /* Replace the listings's properties with the new properties found in req.body */
  
@@ -63,19 +106,55 @@ exports.update = function(req, res) {
  
   /* Save the listing */
 
-};
-
 /* Delete a listing */
-exports.delete = function(req, res) {
-  var listing = req.listing;
 
-  /* Add your code to remove the listins */
+exports.delete = function (req, res) {
+    var listing = req.listing;
+    listing.remove(
+        function (err) {
+            if (err)
+                res.send(err);
+            res.json({
+                status: "success",
+                message: 'Listing deleted!'
+            });
+        });
+    };
 
-};
+    /*var listing = req.listing;
+
+    //var bodyList = new Listing(req.body);
+    var query = { code: listing.code };
+
+
+    Listing.remove(query).then(error => {
+        if (error) {
+            return res.status(404).send({
+                message: "Listing not sucessfully deleted."
+            });
+        }
+        res.send({ message: "Listing sucessfully deleted." });
+    });*/
+
+    //Listing.remove( { code: {} }, true); ??
+
+    /* Add your code to remove the listing */
+
+
+
 
 /* Retreive all the directory listings, sorted alphabetically by listing code */
-exports.list = function(req, res) {
-  /* Add your code */
+exports.list = function (req, res) {
+    //var listing = req.listing;
+
+    Listing.find({}).sort('code').exec(function (err, listings) {
+        if (err) {
+            return res.status(404).send({
+                message: "Not successfully found."
+            });
+        }
+        res.json(listings);
+    });
 };
 
 /* 

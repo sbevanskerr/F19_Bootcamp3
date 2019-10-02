@@ -7,7 +7,7 @@ module.exports = {
     uri: ''//place the URI of your mongo database here.
   }, 
   openCage: {
-    key: '' //place your openCage public key here - Sign-up for a free key https://opencagedata.com/
+      key: '16c574bf83ef4ee3b0517db45c2c4ed1' //place your openCage public key here - Sign-up for a free key https://opencagedata.com/
   },
   port: 8080
 };
